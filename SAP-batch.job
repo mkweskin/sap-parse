@@ -1,0 +1,36 @@
+#This qsub script is designed for the Smithsonian Hydra cluster.
+
+#Enter SAP command options here omitting the actual SAP command
+#Please change "youremail@domain.com" with your email address
+SAPOPTS='-e youremail@domain.com -x 90 -x 80 --minidentity 0.7'
+
+#$ -q mThC.q
+#$ -S /bin/sh
+#$ -j y
+#$ -cwd
+#$ -l mres=2G,h_data=2G,h_vmem=2G
+#$ -o job.out
+#$ -N SAP
+
+module load bioinformatics/sap/1.9.4
+
+echo + `date` job $JOB_NAME started in $QUEUE with jobID=$JOB_ID on $HOSTNAME
+
+if [[ $# -eq 0 ]] ; then
+    echo 'Please enter the rep number. This script should be called from another script that provides this.'
+    exit 1
+fi
+
+#Stagger the starting of jobs by pausing the script
+sleep $1
+
+#Change into sub directory
+cd $1 || exit 1
+
+#Run SAP
+sap $SAPOPTS $1.fasta &>$1.log
+
+#Delete cache folders
+rm -rf project*/*cache*
+
+echo = `date` job $JOB_NAME done
