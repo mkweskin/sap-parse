@@ -7,7 +7,7 @@ Extracts taxonomic rankings from SAP (http://ib.berkeley.edu/labs/slatkin/munch/
 
 Takes the html output from SAP and produces a tab separated list of the assignments at the given confidence level
 
-Input is a folder that contains one or more files named index.html in its hierarchy. The folder is searched recursively for index.html files.
+Input is a directory that contains one or more files named index.html in its hierarchy. The directory is searched recursively for index.html files.
 
 If an OTU table is also given, the data from this table is added to the output table
 
@@ -34,7 +34,7 @@ def readargs():
     '''
 
     parser = argparse.ArgumentParser(description="Extracts taxonomic rankings from SAP html output")
-    parser.add_argument("FOLDER", help="Folder that contains one or more SAP \""+htmlfilename+"\" output files. The \""+htmlfilename+"\" files can be nested in other files.", type=str)
+    parser.add_argument("DIRECTORY", help="Directory that contains one or more SAP \""+htmlfilename+"\" output files. The \""+htmlfilename+"\" files can be nested in other files.", type=str)
     parser.add_argument("-out", help="Name of output file of taxonomy (default \"SAP-out.csv\").", type=str, default="SAP-out.csv")
     parser.add_argument("-otutable", help="Name of optional otu table in csv format. If given the OTU data will be added to the taxonomy", type=str)
     parser.add_argument("-l", "--level", help="The cutoff assignment level (default: 80) (possible values: 80, 90, 95).", default=80, type=int)
@@ -44,8 +44,8 @@ def readargs():
     args = parser.parse_args()
 
     #Check args
-    if not os.path.isdir(args.FOLDER):
-        print("ERROR, folder \""+args.FOLDER+ "\" not found.")
+    if not os.path.isdir(args.DIRECTORY):
+        print("ERROR, directory \""+args.DIRECTORY+ "\" not found.")
         print
         sys.exit(1)
     
@@ -82,14 +82,14 @@ def main():
     #
     #Find all the index.html files
     #
-    print "Searching "+args.FOLDER+" for \""+htmlfilename+"\" files"
+    print "Searching "+args.DIRECTORY+" for \""+htmlfilename+"\" files"
     
     indexfiles = []
-    for root, dirnames, filenames in os.walk(args.FOLDER):
+    for root, dirnames, filenames in os.walk(args.DIRECTORY):
         for filename in fnmatch.filter(filenames, htmlfilename):
             indexfiles.append(os.path.join(root, filename))
     if not indexfiles:
-        print("ERROR, no files named "+htmlfilename+" found in "+args.FOLDER)
+        print("ERROR, no files named "+htmlfilename+" found in "+args.DIRECTORY)
         print
         sys.exit(1)
     else:
@@ -215,7 +215,7 @@ def main():
             out.write(','+','.join(tableline_split))
             out.write("\n")
             
-    print str(len(rankings))+" identifications found in \""+args.FOLDER+"\""
+    print str(len(rankings))+" identifications found in \""+args.DIRECTORY+"\""
     
     if args.otutable:
         print str(len(otutable))+" id numbers found OTU table \""+args.otutable+"\""
