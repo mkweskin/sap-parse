@@ -154,7 +154,7 @@ def main():
                                     rankings[currid]={}
                                 rankings[currid][currrank]=currname    #Add the rank and identifiation to the rankings dictionary
                                 rankings[currid][currrank+"_level"]=tempid.group(2)    #Add the ranking level
-                        if re.search('href="http://www.ncbi.nlm.nih.gov',astring) is not None:    #Links for identification start with "http://www.ncbi.nlm.nih.gov"
+                        if re.search('href="http://www.eol.org',astring) is not None:    #Links for identification start with "http://www.ncbi.nlm.nih.gov"
                             #Get the text from the entire <a> anchor text
                             tempname=re.search('>(.*)<',astring)
                             if tempname:
